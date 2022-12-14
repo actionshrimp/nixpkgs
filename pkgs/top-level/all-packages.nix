@@ -28365,7 +28365,7 @@ with pkgs;
 
     inherit (darwin.apple_sdk.frameworks)
       AppKit Carbon Cocoa IOKit OSAKit Quartz QuartzCore WebKit
-      ImageCaptureCore GSS ImageIO;
+      ImageCaptureCore GSS ImageIO UniformTypeIdentifiers;
     inherit (darwin) sigtool;
   };
 
