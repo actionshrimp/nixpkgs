@@ -106,7 +106,7 @@ in
               curl --request POST \
                 --url "https://api.github.com/app/installations/${toString cfg.githubApp.installationId}/access_tokens" \
                 --header "Accept: application/vnd.github+json" \
-                --header "Authorization: Bearer $$(cat ${jwtPath})" \
+                --header "Authorization: Bearer $(cat "${jwtPath}")" \
                 --header "X-GitHub-Api-Version: 2022-11-28" | jq -r .token > "${newConfigTokenPath}"
 
               chmod 666 "${newConfigTokenPath}"
