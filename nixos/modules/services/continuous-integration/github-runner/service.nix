@@ -97,7 +97,7 @@ in
               install --mode=600 ${escapeShellArg cfg.tokenFile} "${currentConfigTokenPath}"
             }
             generate_tokens() {
-              install --mode=600 ${escapeShellArg cfg.githubApp.privateKeyFile} "privateKeyPath"
+              install --mode=600 ${escapeShellArg cfg.githubApp.privateKeyFile} "${privateKeyPath}"
               echo "Generating JWT for Github App based authentication"
               jwt encode --exp=$((`date +%s` + 60)) --iss ${toString cfg.githubApp.appId} --alg RS256 --secret "@${privateKeyPath}" '{}' > "${jwtPath}"
               chmod 600 "${jwtPath}"
