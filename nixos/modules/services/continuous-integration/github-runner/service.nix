@@ -103,7 +103,7 @@ in
               chmod 600 "${jwtPath}"
 
               echo "Generating install token for Github App based authentication"
-              curl --request POST \
+              curl -s --request POST \
                 --url "https://api.github.com/app/installations/${toString cfg.githubApp.installationId}/access_tokens" \
                 --header "Accept: application/vnd.github+json" \
                 --header "Authorization: Bearer $(cat "${jwtPath}")" \
