@@ -38,8 +38,39 @@ with lib;
     example = "https://github.com/nixos/nixpkgs";
   };
 
+  githubApp = mkOption {
+    description = lib.mdDoc ''
+      As an alternative to passing a Github token directly, you can also pass details for a Github App.
+      This allows you to grant organisation level agent management via the `organization_self_hosted_runners` permission.
+
+      If you pass this option, on startup, the systemd service will:
+      - Create a JWT for the Github App
+      - Request an installation token for the Github App
+      - Use the installation token to register the agent.
+    '';
+    type = types.nullOr (types.submodule {
+      options = {
+        appId = mkOption {
+          type = types.int;
+        };
+
+        installationId = mkOption {
+          type = types.int;
+        };
+
+        privateKeyFile = mkOption {
+          description = lib.mdDoc ''
+            This is used to generate a JWT, which in turn is used to generate an installation token for the github app.
+          '';
+          type = types.path;
+        };
+      };
+    });
+
+  };
+
   tokenFile = mkOption {
-    type = types.path;
+    type = types.nullOr types.path;
     description = lib.mdDoc ''
       The full path to a file which contains either
 
@@ -79,6 +110,7 @@ with lib;
       so these are not recommended.
     '';
     example = "/run/secrets/github-runner/nixos.token";
+    default = null;
   };
 
   name = let
