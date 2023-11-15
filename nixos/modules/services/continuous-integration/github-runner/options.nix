@@ -52,10 +52,16 @@ with lib;
       options = {
         appId = mkOption {
           type = types.int;
+          description = lib.mdDoc ''
+            The Github App ID. You can get this from the app settings page.
+          '';
         };
 
         installationId = mkOption {
           type = types.int;
+          description = lib.mdDoc ''
+            The Github App Installation ID. After an app has been 'installed' to an organization, you can get the installation ID from the URL when you click on the app at https://github.com/organizations/YOUR_ORG/settings/installations/.
+          '';
         };
 
         privateKeyFile = mkOption {
@@ -113,23 +119,26 @@ with lib;
     default = null;
   };
 
-  name = let
-    # Same pattern as for `networking.hostName`
-    baseType = types.strMatching "^$|^[[:alnum:]]([[:alnum:]_-]{0,61}[[:alnum:]])?$";
-  in mkOption {
-    type = if includeNameDefault then baseType else types.nullOr baseType;
-    description = lib.mdDoc ''
-      Name of the runner to configure. Defaults to the hostname.
+  name =
+    let
+      # Same pattern as for `networking.hostName`
+      baseType = types.strMatching "^$|^[[:alnum:]]([[:alnum:]_-]{0,61}[[:alnum:]])?$";
+    in
+    mkOption
+      {
+        type = if includeNameDefault then baseType else types.nullOr baseType;
+        description = lib.mdDoc ''
+          Name of the runner to configure. Defaults to the hostname.
 
-      Changing this option triggers a new runner registration.
-    '';
-    example = "nixos";
-  } // (if includeNameDefault then {
-    default = config.networking.hostName;
-    defaultText = literalExpression "config.networking.hostName";
-  } else {
-    default = null;
-  });
+          Changing this option triggers a new runner registration.
+        '';
+        example = "nixos";
+      } // (if includeNameDefault then {
+      default = config.networking.hostName;
+      defaultText = literalExpression "config.networking.hostName";
+    } else {
+      default = null;
+    });
 
   runnerGroup = mkOption {
     type = types.nullOr types.str;
@@ -178,7 +187,7 @@ with lib;
     example = {
       GIT_CONFIG = "/path/to/git/config";
     };
-    default = {};
+    default = { };
   };
 
   serviceOverrides = mkOption {
@@ -190,7 +199,7 @@ with lib;
       ProtectHome = false;
       RestrictAddressFamilies = [ "AF_PACKET" ];
     };
-    default = {};
+    default = { };
   };
 
   package = mkOption {
