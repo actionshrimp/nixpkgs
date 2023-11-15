@@ -117,7 +117,11 @@ in
             }
             clean_state() {
               find "$STATE_DIRECTORY/" -mindepth 1 -delete
-              copy_tokens
+              if [[ "${optionalString (cfg.githubApp != null) "1"}" ]]; then
+                generate_tokens
+              else
+                copy_tokens
+              fi
             }
             diff_config() {
               changed=0
