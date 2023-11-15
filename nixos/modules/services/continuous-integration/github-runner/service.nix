@@ -221,12 +221,17 @@ in
       StateDirectoryMode = "0700";
       WorkingDirectory = workDir;
 
-      InaccessiblePaths = [
+      InaccessiblePaths = (if (cfg.tokenFile != null) then [
         # Token file path given in the configuration, if visible to the service
         "-${cfg.tokenFile}"
+      ] else [ ]) ++ [
         # Token file in the state directory
-        "${stateDir}/${currentConfigTokenFilename}"
-      ];
+        "${currentConfigTokenPath}"
+        "-${jwtPath}"
+        "-${privateKeyPath}"
+      ] ++ (if (cfg.githubApp != null) then [
+        "-${cfg.githubApp.privateKeyFile}"
+      ] else [ ]);
 
       KillSignal = "SIGINT";
 
