@@ -44,7 +44,7 @@ in
     gzip
   ]) ++ [
     config.nix.package
-  ] ++ cfg.extraPackages ++ (if (cfg.githubApp != null) then (with pkgs; [ jwt-cli jq ]) else [ ]);
+  ] ++ cfg.extraPackages ++ (if (cfg.githubApp != null) then (with pkgs; [ jwt-cli jq curl ]) else [ ]);
 
   serviceConfig = mkMerge [
     {
