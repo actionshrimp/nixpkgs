@@ -101,6 +101,7 @@ in
               echo "Generating JWT for Github App based authentication"
               jwt encode --exp=$((`date +%s` + 60)) --iss ${toString cfg.githubApp.appId} --alg RS256 --secret "@${privateKeyPath}" '{}' > "${jwtPath}"
               chmod 600 "${jwtPath}"
+              rm "${privateKeyPath}"
 
               echo "Generating install token for Github App based authentication"
               curl -s --request POST \
@@ -110,6 +111,7 @@ in
                 --header "X-GitHub-Api-Version: 2022-11-28" | jq -r .token > "${newConfigTokenPath}"
 
               chmod 666 "${newConfigTokenPath}"
+              rm "${jwtPath}"
               echo "Generated."
 
               # Also copy current file to allow for a diff on the next start
@@ -226,9 +228,7 @@ in
         "-${cfg.tokenFile}"
       ] else [ ]) ++ [
         # Token file in the state directory
-        "${currentConfigTokenPath}"
-        "-${jwtPath}"
-        "-${privateKeyPath}"
+        "${stateDir}/${currentConfigTokenFilename}"
       ] ++ (if (cfg.githubApp != null) then [
         "-${cfg.githubApp.privateKeyFile}"
       ] else [ ]);
